@@ -135,8 +135,19 @@ def main() -> None:
                             fielded_monsters[i] = alive_monsters[0]
                             battle_text += f" Player {i+1} sent out {fielded_monsters[i].name}!"
                         else:
-                            battle_text = f"PLAYER {2 if i == 0 else 1} WINS!"
+                            winner = f"PLAYER {2 if i == 0 else 1}"
                             game_over = True
+                            play_again = ui.win_screen(screen, font, winner)
+                            if play_again:
+                                main()
+                            running = False
+                        else:
+                            winner = f"PLAYER {2 if i == 0 else 1}"
+                            game_over = True
+                            play_again = ui.win_screen(screen, font, winner)
+                            if play_again:
+                                main()
+                            running = False
 
     pygame.quit()
 
