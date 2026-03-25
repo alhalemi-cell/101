@@ -1,0 +1,11 @@
+# Python
+__pycache__
+venv
+*.egg-info
+
+# NPM
+node_modules
+package.json
+package-lock.json
+commitlint.config.js
+.husky

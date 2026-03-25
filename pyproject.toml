@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "battlesim"
+version = "2.0.0"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.basedpyright]
+include = ["./src/"]
