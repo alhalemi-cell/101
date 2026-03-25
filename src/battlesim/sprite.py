@@ -47,12 +47,13 @@ class SpriteRecord:
 class StaticMonsterSprite(pygame.sprite.Sprite):
     def __init__(self, monster_name: str, orientation: SpriteOrientation, x: int, y: int):
         super().__init__()
-        suffix = "back" if orientation == SpriteOrientation.REAR_FACING else "front"
-        path = os.path.join(constants.Assets.SPRITE_DIR, f"{monster_name.lower()}_{suffix}.png")
+        path = os.path.join(constants.Assets.SPRITE_DIR, f"{monster_name.lower()}_front.png")
         
         try:
             self.image = pygame.image.load(path).convert_alpha()
-            self.image = pygame.transform.scale(self.image, (200, 200)) # Scale up
+            self.image = pygame.transform.scale(self.image, (200, 200))
+            if orientation == SpriteOrientation.REAR_FACING:
+                self.image = pygame.transform.flip(self.image, True, False)
         except (FileNotFoundError, pygame.error):
             self.image = pygame.Surface((150, 150))
             self.image.fill((200, 200, 200))
