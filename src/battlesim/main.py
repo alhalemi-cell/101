@@ -111,14 +111,13 @@ def main() -> None:
 
                     elif event.key == pygame.K_s:
                         active_team = player_one_team if current_turn % 2 == 0 else player_two_team
-                        chosen = ui.switch_monster_menu(screen, font, active_team, active_player_monster)
-                        if chosen != active_player_monster:
-                            fielded_monsters[current_turn % 2] = chosen
-                            battle_text = f"Player {(current_turn % 2) + 1} switched to {chosen.name}!"
+                        swappable = [mon for mon in active_team if not mon.fainted and mon != active_player_monster]
+                        if swappable:
+                            fielded_monsters[current_turn % 2] = swappable[0]
+                            battle_text = f"Player {(current_turn % 2) + 1} switched to {fielded_monsters[current_turn % 2].name}!"
                             turn_completed = True
-    else:
-        battle_text = "Switch cancelled."
-                if turn_completed:
+
+                    if turn_completed:
                         current_turn += 1
                         active_player_monster.end_of_turn()
                         
