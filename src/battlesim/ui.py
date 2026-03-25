@@ -104,3 +104,46 @@ def monster_selection_menu(screen, font, monsters: tuple[m.Monster], title: str,
                     return monsters[selected_index]
 
         pygame.display.flip()
+
+def switch_monster_menu(screen, font, team: list[m.Monster], current_monster: m.Monster) -> m.Monster:
+    swappable = [mon for mon in team if not mon.fainted and mon != current_monster]
+    if not swappable:
+        return current_monster
+
+    selected_index = 0
+
+    while True:
+        screen.fill((30, 30, 30))
+        draw_text("SWITCH MONSTER  (ESC to cancel)", font, screen, c.UI.Colors.WHITE, 200, 50)
+        draw_text("Use UP/DOWN to choose, ENTER to confirm", font, screen, c.UI.Colors.GRAY, 150, 100)
+
+        for i, monster in enumerate(swappable):
+            color = c.UI.Colors.GREEN if i == selected_index else c.UI.Colors.GRAY
+            prefix = "> " if i == selected_index else "  "
+            hp_ratio = monster.current_health / monster.max_health
+            draw_text(
+                f"{prefix}{monster.name}   HP: {monster.current_health}/{monster.max_health}",
+                font, screen, color, 200, 200 + i * 50
+            )
+            # Mini HP bar
+            bar_x, bar_y = 500, 205 + i * 50
+            pygame.draw.rect(screen, c.UI.Colors.GRAY, (bar_x, bar_y, 150, 12), border_radius=4)
+            bar_color = c.UI.Colors.GREEN if hp_ratio > 0.5 else c.UI.Colors.YELLOW if hp_ratio > 0.25 else c.UI.Colors.RED
+            pygame.draw.rect(screen, bar_color, (bar_x, bar_y, int(150 * hp_ratio), 12), border_radius=4)
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return current_monster  # cancelled, no switch
+                elif event.key == pygame.K_UP:
+                    selected_index = (selected_index - 1) % len(swappable)
+                elif event.key == pygame.K_DOWN:
+                    selected_index = (selected_index + 1) % len(swappable)
+                elif event.key == pygame.K_RETURN:
+                    return swappable[selected_index]
+
