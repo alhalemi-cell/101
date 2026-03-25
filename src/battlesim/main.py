@@ -141,13 +141,6 @@ def main() -> None:
                             if play_again:
                                 main()
                             running = False
-                        else:
-                            winner = f"PLAYER {2 if i == 0 else 1}"
-                            game_over = True
-                            play_again = ui.win_screen(screen, font, winner)
-                            if play_again:
-                                main()
-                            running = False
 
     pygame.quit()
 
