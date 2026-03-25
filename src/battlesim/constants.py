@@ -26,8 +26,8 @@ class Config:
 class Assets:
     SPRITE_DIR: str = "assets/sprites"
     SOUND_DIR: str = "assets/sounds"
-    HIT_SOUND: str = "hit.wav"
-    FAINT_SOUND: str = "faint.wav"
+    HIT_SOUND: str = "IMHIT.wav"
+    FAINT_SOUND: str = "IMDOWN.wav"
 
 @dataclass(frozen=True)
 class Sprite:
