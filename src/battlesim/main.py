@@ -125,7 +125,8 @@ def main() -> None:
                         if fielded_monsters[0].fainted:
                             if faint_sound: faint_sound.play()
                         if fielded_monsters[1].fainted:
-                            if faint_sound: faint_sound.play()
+                            if faint_sound: 
+                                faint_sound.play()
             if not game_over:
                 for i in range(2):
                     if fielded_monsters[i].fainted:
