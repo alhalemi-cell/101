@@ -118,7 +118,7 @@ def main() -> None:
                             turn_completed = True
     else:
         battle_text = "Switch cancelled."
-                    if turn_completed:
+                if turn_completed:
                         current_turn += 1
                         active_player_monster.end_of_turn()
                         
