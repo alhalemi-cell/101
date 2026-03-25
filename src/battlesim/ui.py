@@ -147,3 +147,31 @@ def switch_monster_menu(screen, font, team: list[m.Monster], current_monster: m.
                 elif event.key == pygame.K_RETURN:
                     return swappable[selected_index]
 
+def win_screen(screen, font, winner: str) -> bool:
+    """Returns True if player wants to play again, False to quit."""
+    options = ["PLAY AGAIN", "QUIT"]
+    selected_index = 0
+
+    while True:
+        screen.fill((30, 30, 30))
+        draw_text(f"{winner} WINS!", font, screen, c.UI.Colors.GREEN, 300, 150)
+        draw_text("Use UP/DOWN to choose, ENTER to confirm", font, screen, c.UI.Colors.GRAY, 150, 220)
+
+        for i, option in enumerate(options):
+            color = c.UI.Colors.GREEN if i == selected_index else c.UI.Colors.GRAY
+            prefix = "> " if i == selected_index else "  "
+            draw_text(f"{prefix}{option}", font, screen, color, 330, 320 + i * 50)
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected_index = (selected_index - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    selected_index = (selected_index + 1) % len(options)
+                elif event.key == pygame.K_RETURN:
+                    return selected_index == 0  # True = play again, False = quit
