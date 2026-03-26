@@ -32,7 +32,24 @@ def draw_hp_bar(monster: m.Monster, x: int, y: int, screen: pygame.Surface, font
 
 def draw_battle_interface(screen, font, battle_text, current_monster):
     draw_panel(screen, 10, 460, 780, 130, c.UI.Colors.PANEL_BG, c.UI.Colors.PANEL_BORDER)
-    draw_text(battle_text, font, screen, c.UI.Colors.BLACK, 30, 485)
+    # Word wrap the battle text
+words = battle_text.split(' ')
+lines = []
+current_line = ''
+
+for word in words:
+    test_line = current_line + word + ' '
+    if font.size(test_line)[0] < 340:
+        current_line = test_line
+    else:
+        lines.append(current_line.strip())
+        current_line = word + ' '
+
+if current_line:
+    lines.append(current_line.strip())
+
+for i, line in enumerate(lines):
+    draw_text(line, font, screen, c.UI.Colors.BLACK, 30, 475 + i * 28)
     menu_x, menu_y = 390, 460
     draw_panel(screen, menu_x, menu_y, 400, 130, c.UI.Colors.WHITE, c.UI.Colors.PANEL_BORDER)
     
