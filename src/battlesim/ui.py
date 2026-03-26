@@ -32,32 +32,34 @@ def draw_hp_bar(monster: m.Monster, x: int, y: int, screen: pygame.Surface, font
 
 def draw_battle_interface(screen, font, battle_text, current_monster):
     draw_panel(screen, 10, 460, 780, 130, c.UI.Colors.PANEL_BG, c.UI.Colors.PANEL_BORDER)
-    # Word wrap the battle text
-words = battle_text.split(' ')
-lines = []
-current_line = ''
 
-for word in words:
-    test_line = current_line + word + ' '
-    if font.size(test_line)[0] < 340:
-        current_line = test_line
-    else:
+    # wrap battle text
+    words = battle_text.split(' ')
+    lines = []
+    current_line = ''
+
+    for word in words:
+        test_line = current_line + word + ' '
+        if font.size(test_line)[0] < 300:
+            current_line = test_line
+        else:
+            lines.append(current_line.strip())
+            current_line = word + ' '
+
+    if current_line:
         lines.append(current_line.strip())
-        current_line = word + ' '
 
-if current_line:
-    lines.append(current_line.strip())
+    for i, line in enumerate(lines[:3]):
+        draw_text(line, font, screen, c.UI.Colors.BLACK, 25, 475 + i * 26)
 
-for i, line in enumerate(lines):
-    draw_text(line, font, screen, c.UI.Colors.BLACK, 30, 475 + i * 28)
     menu_x, menu_y = 390, 460
     draw_panel(screen, menu_x, menu_y, 400, 130, c.UI.Colors.WHITE, c.UI.Colors.PANEL_BORDER)
-    
+
     positions = [
-        (menu_x + 30, menu_y + 25), (menu_x + 220, menu_y + 25),
-        (menu_x + 30, menu_y + 75), (menu_x + 220, menu_y + 75)
+        (menu_x + 20, menu_y + 25), (menu_x + 200, menu_y + 25),
+        (menu_x + 20, menu_y + 75), (menu_x + 200, menu_y + 75)
     ]
-    
+
     for i, move in enumerate(current_monster.moves.moves):
         draw_text(f"{i + 1}: {move.name}", font, screen, c.UI.Colors.BLACK, positions[i][0], positions[i][1])
 
