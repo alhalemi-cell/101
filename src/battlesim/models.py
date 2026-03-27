@@ -99,7 +99,11 @@ class Monster:
             if move.status_effect == "poison" and not defending_monster.is_poisoned:
                 defending_monster.is_poisoned = True
                 message += f"{defending_monster.name} was poisoned! "
+            elif move.status_effect == "leech" and not defending_monster.is_leech_seeded:
+                defending_monster.is_leech_seeded = True
+                message += f"{defending_monster.name} was seeded! "
             damage, eff, crit = self.calculate_damage(move, defending_monster, multiplier) if move.power > 0 else (0, 1.0, False)
+            
         else:
             damage, eff, crit = self.calculate_damage(move, defending_monster, multiplier)
             
@@ -176,6 +180,19 @@ class MoveContainer:
     
     def GetMove(self, i: int):
         return self.moves[i]
+
+    def end_of_turn(self, opponent: "Monster" = None):
+        if self.is_poisoned and not self.fainted:
+            poison_dmg = max(1, self.max_health // 8)
+            self.take_damage(poison_dmg)
+            print(f"{self.name} took {poison_dmg} damage from poison!")
+        if self.is_leech_seeded and not self.fainted and opponent:
+            leech_dmg = max(1, self.max_health // 8)
+            self.take_damage(leech_dmg)
+            opponent.heal(leech_dmg)
+            print(f"{self.name} had HP drained by Leech Seed!")
+
+    
 
     @override
     def __str__(self):
