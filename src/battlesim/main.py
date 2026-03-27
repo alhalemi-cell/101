@@ -140,7 +140,7 @@ s.StaticMonsterSprite(fielded_monsters[1].name, s.SpriteOrientation.FRONT_FACING
                             game_over = True
                             play_again = ui.win_screen(screen, font, winner)
                             if play_again:
-                                main()
+                                return main()
                             running = False
 
     pygame.quit()
