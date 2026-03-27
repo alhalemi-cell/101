@@ -113,10 +113,10 @@ class Moves:
     NATURE_RUMBLE: m.Move = m.Move("Nature Rumble", m.MonsterType.GRASS, 75)
     
     # GRASS HEALING / STATUS MOVES
-NATURE_HEAL: m.Move = m.Move("Nature Heal", m.MonsterType.GRASS, 0, m.MoveEffect.HEAL)
-TOXIC_SPORES: m.Move = m.Move("Toxic Spores", m.MonsterType.GRASS, 30, m.MoveEffect.STATUS, "poison")
-LEECH_SEED: m.Move = m.Move("Leech Seed", m.MonsterType.GRASS, 0, m.MoveEffect.STATUS, "leech")
-SLEEP_POWDER: m.Move = m.Move("Sleep Powder", m.MonsterType.GRASS, 0, m.MoveEffect.STATUS, "sleep")
+    NATURE_HEAL: m.Move = m.Move("Nature Heal", m.MonsterType.GRASS, 0, m.MoveEffect.HEAL)
+    TOXIC_SPORES: m.Move = m.Move("Toxic Spores", m.MonsterType.GRASS, 30, m.MoveEffect.STATUS, "poison")
+    LEECH_SEED: m.Move = m.Move("Leech Seed", m.MonsterType.GRASS, 0, m.MoveEffect.STATUS, "leech")
+    SLEEP_POWDER: m.Move = m.Move("Sleep Powder", m.MonsterType.GRASS, 0, m.MoveEffect.STATUS, "sleep")
 
 @dataclass(frozen=True)
 class Monsters:
