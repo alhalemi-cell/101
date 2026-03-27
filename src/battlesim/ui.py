@@ -12,23 +12,53 @@ def draw_panel(screen, x, y, width, height, bg_color, border_color, border_radiu
     pygame.draw.rect(screen, border_color, (x, y, width, height), width=4, border_radius=border_radius)
 
 def draw_hp_bar(monster: m.Monster, x: int, y: int, screen: pygame.Surface, font: pygame.font.Font):
-    draw_panel(screen, x, y, 260, 80, c.UI.Colors.PANEL_BG, c.UI.Colors.PANEL_BORDER)
-    
-    draw_text(f"{monster.name}", font, screen, c.UI.Colors.BLACK, x + 20, y + 15)
-    
-    ratio = monster.current_health / monster.max_health
-    bar_x, bar_y = x + 20, y + 45
+    draw_panel(screen, x, y, 280, 100, c.UI.Colors.PANEL_BG, c.UI.Colors.PANEL_BORDER)
 
+    # Monster name
+    draw_text(f"{monster.name}", font, screen, c.UI.Colors.BLACK, x + 15, y + 8)
+
+    # Type badge
+    type_colors = {
+        m.MonsterType.FIRE:  (220, 90,  40),
+        m.MonsterType.WATER: (60,  130, 220),
+        m.MonsterType.GRASS: (60,  180, 60),
+    }
+    type_color = type_colors.get(monster.monster_type, c.UI.Colors.GRAY)
+    pygame.draw.rect(screen, type_color, (x + 160, y + 10, 60, 20), border_radius=4)
+    small_font = pygame.font.SysFont(c.UI.Font.FONT_NAME, 14)
+    draw_text(monster.monster_type.name, small_font, screen, c.UI.Colors.WHITE, x + 165, y + 12)
+
+    # HP numbers
+    draw_text(f"HP: {monster.current_health}/{monster.max_health}", small_font, screen, c.UI.Colors.BLACK, x + 15, y + 38)
+
+    # HP bar
+    ratio = monster.current_health / monster.max_health
+    bar_x, bar_y = x + 15, y + 58
     hp_color = c.UI.Colors.GREEN
     if ratio <= 0.2:
         hp_color = c.UI.Colors.RED
     elif ratio <= 0.5:
         hp_color = c.UI.Colors.YELLOW
-    
+
     pygame.draw.rect(screen, c.UI.Colors.GRAY, (bar_x, bar_y, c.UI.HealthBar.BAR_WIDTH, c.UI.HealthBar.BAR_HEIGHT), border_radius=4)
     if ratio > 0:
         pygame.draw.rect(screen, hp_color, (bar_x, bar_y, int(c.UI.HealthBar.BAR_WIDTH * ratio), c.UI.HealthBar.BAR_HEIGHT), border_radius=4)
     pygame.draw.rect(screen, c.UI.Colors.BLACK, (bar_x, bar_y, c.UI.HealthBar.BAR_WIDTH, c.UI.HealthBar.BAR_HEIGHT), width=2, border_radius=4)
+
+    # Status badges
+    badge_x = x + 15
+    badge_y = y + 78
+    if monster.is_asleep:
+        pygame.draw.rect(screen, (100, 100, 220), (badge_x, badge_y, 40, 16), border_radius=3)
+        draw_text("SLP", small_font, screen, c.UI.Colors.WHITE, badge_x + 4, badge_y + 1)
+        badge_x += 46
+    if monster.is_poisoned:
+        pygame.draw.rect(screen, (160, 50, 200), (badge_x, badge_y, 40, 16), border_radius=3)
+        draw_text("PSN", small_font, screen, c.UI.Colors.WHITE, badge_x + 4, badge_y + 1)
+        badge_x += 46
+    if monster.is_leech_seeded:
+        pygame.draw.rect(screen, (40, 160, 40), (badge_x, badge_y, 40, 16), border_radius=3)
+        draw_text("SED", small_font, screen, c.UI.Colors.WHITE, badge_x + 4, badge_y + 1)
 
 def draw_battle_interface(screen, font, battle_text, current_monster):
     draw_panel(screen, 10, 460, 780, 130, c.UI.Colors.PANEL_BG, c.UI.Colors.PANEL_BORDER)
