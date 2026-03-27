@@ -127,18 +127,52 @@ def main_menu(screen, font):
 
 def monster_selection_menu(screen, font, monsters: tuple[m.Monster], title: str, player1_monsters: list[m.Monster], player2_monsters: list[m.Monster]):
     selected_index = 0
+    small_font = pygame.font.SysFont(c.UI.Font.FONT_NAME, 14)
 
     while True:
-        screen.fill((30, 30, 30)) 
-        draw_text(title, font, screen, c.UI.Colors.WHITE, 200, 50)
-        draw_text("Use UP/DOWN to choose, ENTER to confirm", font, screen, c.UI.Colors.GRAY, 150, 100)
-        draw_text(f"Player 1 Team: {', '.join(m.name for m in player1_monsters)}", font, screen, c.UI.Colors.GREEN, 275, 150)
-        draw_text(f"Player 2 Team: {', '.join(m.name for m in player2_monsters)}", font, screen, c.UI.Colors.GREEN, 275, 500)
-        
+        screen.fill((30, 30, 30))
+        draw_text(title, font, screen, c.UI.Colors.WHITE, 200, 30)
+        draw_text("Use UP/DOWN to choose, ENTER to confirm", font, screen, c.UI.Colors.GRAY, 150, 70)
+        draw_text(f"Player 1 Team: {', '.join(m.name for m in player1_monsters)}", small_font, screen, c.UI.Colors.GREEN, 150, 110)
+        draw_text(f"Player 2 Team: {', '.join(m.name for m in player2_monsters)}", small_font, screen, c.UI.Colors.GREEN, 150, 130)
+
+        # Monster list on the left
         for i, monster in enumerate(monsters):
             color = c.UI.Colors.GREEN if i == selected_index else c.UI.Colors.GRAY
             prefix = "> " if i == selected_index else "  "
-            draw_text(f"{prefix}{i + 1}. {monster.name}", font, screen, color, 50, 180 + i * 25)
+            draw_text(f"{prefix}{i + 1}. {monster.name}", font, screen, color, 50, 160 + i * 30)
+
+        # Preview panel on the right for selected monster
+        selected = monsters[selected_index]
+        preview_x, preview_y = 500, 150
+
+        # Panel background
+        draw_panel(screen, preview_x, preview_y, 250, 320, (45, 45, 45), (80, 80, 80))
+
+        # Sprite preview
+        import battlesim.sprite as s
+        sprite = s.StaticMonsterSprite(selected.name, s.SpriteOrientation.FRONT_FACING, preview_x + 125, preview_y + 110)
+        sprite.draw(screen)
+
+        # Monster details
+        type_colors = {
+            m.MonsterType.FIRE:  (220, 90,  40),
+            m.MonsterType.WATER: (60,  130, 220),
+            m.MonsterType.GRASS: (60,  180, 60),
+        }
+        type_color = type_colors.get(selected.monster_type, c.UI.Colors.GRAY)
+
+        draw_text(selected.name, font, screen, c.UI.Colors.WHITE, preview_x + 15, preview_y + 220)
+
+        # Type badge
+        pygame.draw.rect(screen, type_color, (preview_x + 15, preview_y + 250, 70, 22), border_radius=4)
+        draw_text(selected.monster_type.name, small_font, screen, c.UI.Colors.WHITE, preview_x + 20, preview_y + 253)
+
+        # Stats
+        draw_text(f"HP:  {selected.max_health}", small_font, screen, c.UI.Colors.GRAY, preview_x + 15, preview_y + 278)
+        draw_text(f"ATK: {selected.damage}  DEF: {selected.defense}  SPD: {selected.speed}", small_font, screen, c.UI.Colors.GRAY, preview_x + 15, preview_y + 295)
+
+        pygame.display.flip()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -151,8 +185,6 @@ def monster_selection_menu(screen, font, monsters: tuple[m.Monster], title: str,
                     selected_index = (selected_index + 1) % len(monsters)
                 elif event.key == pygame.K_RETURN:
                     return monsters[selected_index]
-
-        pygame.display.flip()
 
 def switch_monster_menu(screen, font, team: list[m.Monster], current_monster: m.Monster) -> m.Monster:
     swappable = [mon for mon in team if not mon.fainted and mon != current_monster]
