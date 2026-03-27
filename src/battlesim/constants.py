@@ -113,8 +113,9 @@ class Moves:
     NATURE_RUMBLE: m.Move = m.Move("Nature Rumble", m.MonsterType.GRASS, 75)
     
     # GRASS HEALING / STATUS MOVES
-    NATURE_HEAL: m.Move = m.Move("Nature Heal", m.MonsterType.GRASS, 0, m.MoveEffect.HEAL)
-    TOXIC_SPORES: m.Move = m.Move("Toxic Spores", m.MonsterType.GRASS, 30, m.MoveEffect.STATUS, "poison")
+NATURE_HEAL: m.Move = m.Move("Nature Heal", m.MonsterType.GRASS, 0, m.MoveEffect.HEAL)
+TOXIC_SPORES: m.Move = m.Move("Toxic Spores", m.MonsterType.GRASS, 30, m.MoveEffect.STATUS, "poison")
+LEECH_SEED: m.Move = m.Move("Leech Seed", m.MonsterType.GRASS, 0, m.MoveEffect.STATUS, "leech")
 
 @dataclass(frozen=True)
 class Monsters:
@@ -128,7 +129,7 @@ class Monsters:
     GYRADOS: m.Monster = m.Monster("Gyarados", m.MonsterType.WATER, 95, 125, 79, 81, m.Ability.MOXIE, m.MoveContainer(Moves.WATER_RAGE, Moves.DRAGON_ROAR, Moves.TIDAL_FURY, Moves.AERIAL_CRUSH))
     BLASTOISE: m.Monster = m.Monster("Blastoise", m.MonsterType.WATER, 79, 83, 100, 78, m.Ability.RAIN_DISH, m.MoveContainer(Moves.HYDRO_CANNON, Moves.SHELL_TACKLE, Moves.PRESSURE_JET, Moves.AQUA_BARRAGE))
     
-    BULBASAUR: m.Monster = m.Monster("Bulbasaur", m.MonsterType.GRASS, 45, 49, 49, 45, m.Ability.CHLOROPHYLL, m.MoveContainer(Moves.VINE_WHIP, Moves.SEED_BURST, Moves.LEAF_SHOT, Moves.NATURE_HEAL))
+    BULBASAUR: m.Monster = m.Monster("Bulbasaur", m.MonsterType.GRASS, 45, 49, 49, 45, m.Ability.CHLOROPHYLL, m.MoveContainer(Moves.VINE_WHIP, Moves.SEED_BURST, Moves.LEECH_SEED, Moves.NATURE_HEAL))
     VENUSAUR: m.Monster = m.Monster("Venusaur", m.MonsterType.GRASS, 80, 82, 83, 80, m.Ability.CHLOROPHYLL, m.MoveContainer(Moves.SOLAR_BEAM, Moves.TOXIC_SPORES, Moves.PETAL_STORM, Moves.VINE_CRUSH))
     SCEPTILE: m.Monster = m.Monster("Sceptile", m.MonsterType.GRASS, 70, 85, 65, 120, m.Ability.UNBURDEN, m.MoveContainer(Moves.LEAF_BLADE, Moves.FOREST_STRIKE, Moves.QUICK_SLASH, Moves.ENERGY_PULSE))
     RILLABOOM: m.Monster = m.Monster("Rillaboom", m.MonsterType.GRASS, 100, 125, 90, 85, m.Ability.GRASSY_SURGE, m.MoveContainer(Moves.WOOD_HAMMER, Moves.DRUM_BEAT, Moves.ROOT_SMASH, Moves.NATURE_RUMBLE))
