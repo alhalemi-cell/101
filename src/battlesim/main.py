@@ -120,7 +120,7 @@ s.StaticMonsterSprite(fielded_monsters[1].name, s.SpriteOrientation.FRONT_FACING
 
                     if turn_completed:
                         current_turn += 1
-                        active_player_monster.end_of_turn()
+                        active_player_monster.end_of_turn(active_enemy_monster)
                         
                         if fielded_monsters[0].fainted:
                             if faint_sound: faint_sound.play()
