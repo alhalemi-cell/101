@@ -116,6 +116,7 @@ class Moves:
 NATURE_HEAL: m.Move = m.Move("Nature Heal", m.MonsterType.GRASS, 0, m.MoveEffect.HEAL)
 TOXIC_SPORES: m.Move = m.Move("Toxic Spores", m.MonsterType.GRASS, 30, m.MoveEffect.STATUS, "poison")
 LEECH_SEED: m.Move = m.Move("Leech Seed", m.MonsterType.GRASS, 0, m.MoveEffect.STATUS, "leech")
+SLEEP_POWDER: m.Move = m.Move("Sleep Powder", m.MonsterType.GRASS, 0, m.MoveEffect.STATUS, "sleep")
 
 @dataclass(frozen=True)
 class Monsters:
@@ -130,7 +131,7 @@ class Monsters:
     BLASTOISE: m.Monster = m.Monster("Blastoise", m.MonsterType.WATER, 79, 83, 100, 78, m.Ability.RAIN_DISH, m.MoveContainer(Moves.HYDRO_CANNON, Moves.SHELL_TACKLE, Moves.PRESSURE_JET, Moves.AQUA_BARRAGE))
     
     BULBASAUR: m.Monster = m.Monster("Bulbasaur", m.MonsterType.GRASS, 45, 49, 49, 45, m.Ability.CHLOROPHYLL, m.MoveContainer(Moves.VINE_WHIP, Moves.SEED_BURST, Moves.LEECH_SEED, Moves.NATURE_HEAL))
-    VENUSAUR: m.Monster = m.Monster("Venusaur", m.MonsterType.GRASS, 80, 82, 83, 80, m.Ability.CHLOROPHYLL, m.MoveContainer(Moves.SOLAR_BEAM, Moves.TOXIC_SPORES, Moves.PETAL_STORM, Moves.VINE_CRUSH))
+    VENUSAUR: m.Monster = m.Monster("Venusaur", m.MonsterType.GRASS, 80, 82, 83, 80, m.Ability.CHLOROPHYLL, m.MoveContainer(Moves.SOLAR_BEAM, Moves.SLEEP_POWDER, Moves.PETAL_STORM, Moves.VINE_CRUSH))
     SCEPTILE: m.Monster = m.Monster("Sceptile", m.MonsterType.GRASS, 70, 85, 65, 120, m.Ability.UNBURDEN, m.MoveContainer(Moves.LEAF_BLADE, Moves.FOREST_STRIKE, Moves.QUICK_SLASH, Moves.ENERGY_PULSE))
     RILLABOOM: m.Monster = m.Monster("Rillaboom", m.MonsterType.GRASS, 100, 125, 90, 85, m.Ability.GRASSY_SURGE, m.MoveContainer(Moves.WOOD_HAMMER, Moves.DRUM_BEAT, Moves.ROOT_SMASH, Moves.NATURE_RUMBLE))
 
