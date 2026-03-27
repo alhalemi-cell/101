@@ -102,6 +102,10 @@ class Monster:
             elif move.status_effect == "leech" and not defending_monster.is_leech_seeded:
                 defending_monster.is_leech_seeded = True
                 message += f"{defending_monster.name} was seeded! "
+            elif move.status_effect == "sleep" and not defending_monster.is_asleep:
+                defending_monster.is_asleep = True
+                defending_monster.current_sleep_turns = random.randint(1, 3)
+                message += f"{defending_monster.name} fell asleep! "
             damage, eff, crit = self.calculate_damage(move, defending_monster, multiplier) if move.power > 0 else (0, 1.0, False)
             
         else:
