@@ -186,31 +186,66 @@ def monster_selection_menu(screen, font, monsters: tuple[m.Monster], title: str,
                 elif event.key == pygame.K_RETURN:
                     return monsters[selected_index]
 
-def switch_monster_menu(screen, font, team: list[m.Monster], current_monster: m.Monster) -> m.Monster:
+def switch_monster_menu(screen, font, team: list[m.Monster], current_monster: m.Monster, player_num: int) -> m.Monster:
+    # Only show alive monsters that aren't currently active
     swappable = [mon for mon in team if not mon.fainted and mon != current_monster]
     if not swappable:
         return current_monster
 
     selected_index = 0
+    small_font = pygame.font.SysFont(c.UI.Font.FONT_NAME, 14)
+    type_colors = {
+        m.MonsterType.FIRE:  (220, 90,  40),
+        m.MonsterType.WATER: (60,  130, 220),
+        m.MonsterType.GRASS: (60,  180, 60),
+    }
 
     while True:
         screen.fill((30, 30, 30))
-        draw_text("SWITCH MONSTER  (ESC to cancel)", font, screen, c.UI.Colors.WHITE, 200, 50)
-        draw_text("Use UP/DOWN to choose, ENTER to confirm", font, screen, c.UI.Colors.GRAY, 150, 100)
 
+        # Title showing which player is switching
+        draw_text(f"PLAYER {player_num} - SWITCH MONSTER", font, screen, c.UI.Colors.WHITE, 220, 30)
+        draw_text("UP/DOWN to choose  |  ENTER to confirm  |  ESC to cancel", small_font, screen, c.UI.Colors.GRAY, 170, 70)
+        draw_text(f"Current: {current_monster.name}", font, screen, c.UI.Colors.YELLOW, 220, 100)
+
+        # Monster list on the left
         for i, monster in enumerate(swappable):
             color = c.UI.Colors.GREEN if i == selected_index else c.UI.Colors.GRAY
             prefix = "> " if i == selected_index else "  "
-            hp_ratio = monster.current_health / monster.max_health
-            draw_text(
-                f"{prefix}{monster.name}   HP: {monster.current_health}/{monster.max_health}",
-                font, screen, color, 200, 200 + i * 50
-            )
-            # Mini HP bar
-            bar_x, bar_y = 500, 205 + i * 50
-            pygame.draw.rect(screen, c.UI.Colors.GRAY, (bar_x, bar_y, 150, 12), border_radius=4)
-            bar_color = c.UI.Colors.GREEN if hp_ratio > 0.5 else c.UI.Colors.YELLOW if hp_ratio > 0.25 else c.UI.Colors.RED
-            pygame.draw.rect(screen, bar_color, (bar_x, bar_y, int(150 * hp_ratio), 12), border_radius=4)
+
+            # Type badge color
+            type_color = type_colors.get(monster.monster_type, c.UI.Colors.GRAY)
+            pygame.draw.rect(screen, type_color, (50, 148 + i * 50, 8, 30), border_radius=2)
+
+            draw_text(f"{prefix}{monster.name}", font, screen, color, 68, 150 + i * 50)
+
+            # HP bar next to name
+            ratio = monster.current_health / monster.max_health
+            bar_color = c.UI.Colors.GREEN if ratio > 0.5 else c.UI.Colors.YELLOW if ratio > 0.25 else c.UI.Colors.RED
+            pygame.draw.rect(screen, c.UI.Colors.GRAY, (280, 158 + i * 50, 100, 10), border_radius=3)
+            pygame.draw.rect(screen, bar_color, (280, 158 + i * 50, int(100 * ratio), 10), border_radius=3)
+            draw_text(f"{monster.current_health}/{monster.max_health}", small_font, screen, c.UI.Colors.GRAY, 390, 155 + i * 50)
+
+        # Preview panel on the right
+        selected = swappable[selected_index]
+        preview_x, preview_y = 500, 130
+        draw_panel(screen, preview_x, preview_y, 260, 340, (45, 45, 45), (80, 80, 80))
+
+        # Sprite
+        import battlesim.sprite as s
+        sprite = s.StaticMonsterSprite(selected.name, s.SpriteOrientation.FRONT_FACING, preview_x + 130, preview_y + 120)
+        sprite.draw(screen)
+
+        # Name and type
+        draw_text(selected.name, font, screen, c.UI.Colors.WHITE, preview_x + 15, preview_y + 230)
+        type_color = type_colors.get(selected.monster_type, c.UI.Colors.GRAY)
+        pygame.draw.rect(screen, type_color, (preview_x + 15, preview_y + 260, 70, 22), border_radius=4)
+        draw_text(selected.monster_type.name, small_font, screen, c.UI.Colors.WHITE, preview_x + 20, preview_y + 263)
+
+        # Stats
+        draw_text(f"HP:  {selected.current_health}/{selected.max_health}", small_font, screen, c.UI.Colors.GRAY, preview_x + 15, preview_y + 290)
+        draw_text(f"ATK: {selected.damage}  DEF: {selected.defense}", small_font, screen, c.UI.Colors.GRAY, preview_x + 15, preview_y + 308)
+        draw_text(f"SPD: {selected.speed}  Ability: {selected.ability.name}", small_font, screen, c.UI.Colors.GRAY, preview_x + 15, preview_y + 326)
 
         pygame.display.flip()
 
@@ -220,7 +255,7 @@ def switch_monster_menu(screen, font, team: list[m.Monster], current_monster: m.
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    return current_monster  # cancelled, no switch
+                    return current_monster
                 elif event.key == pygame.K_UP:
                     selected_index = (selected_index - 1) % len(swappable)
                 elif event.key == pygame.K_DOWN:
