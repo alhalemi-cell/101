@@ -182,22 +182,35 @@ class MoveContainer:
     def __init__(self, move1: Move, move2: Move, move3: Move, move4: Move):
         self.moves: list[Move] = [move1, move2, move3, move4]
     
-    def GetMove(self, i: int):
+    def GetMove(self, i: int) -> Move:
         return self.moves[i]
-
-    def end_of_turn(self, opponent: "Monster" = None):
-        if self.is_poisoned and not self.fainted:
-            poison_dmg = max(1, self.max_health // 8)
-            self.take_damage(poison_dmg)
-            print(f"{self.name} took {poison_dmg} damage from poison!")
-        if self.is_leech_seeded and not self.fainted and opponent:
-            leech_dmg = max(1, self.max_health // 8)
-            self.take_damage(leech_dmg)
-            opponent.heal(leech_dmg)
-            print(f"{self.name} had HP drained by Leech Seed!")
-
-    
 
     @override
     def __str__(self):
         return f"Move1: {self.GetMove(0)}, Move2: {self.GetMove(1)}, Move3: {self.GetMove(2)}, Move4: {self.GetMove(3)}"
+
+  def end_of_turn(self, opponent: "Monster" = None):
+        if self.is_poisoned and not self.fainted:
+            poison_dmg = max(1, self.max_health // 8)
+            self.take_damage(poison_dmg)
+        if self.is_leech_seeded and not self.fainted and opponent:
+            leech_dmg = max(1, self.max_health // 8)
+            self.take_damage(leech_dmg)
+            opponent.heal(leech_dmg)
+        if not self.fainted:
+            if self.ability == Ability.SPEED_BOOST:
+                self.speed += 10
+            elif self.ability == Ability.CHLOROPHYLL:
+                self.speed += 5
+            elif self.ability == Ability.RAIN_DISH:
+                self.heal(max(1, self.max_health // 16))
+            elif self.ability == Ability.GRASSY_SURGE:
+                if self.monster_type == MonsterType.GRASS:
+                    self.heal(max(1, self.max_health // 16))
+            elif self.ability == Ability.SOLAR_POWER:
+                self.take_damage(max(1, self.max_health // 10))
+            elif self.ability == Ability.HYDRATION and self.is_poisoned:
+                self.is_poisoned = False
+    
+
+ 
