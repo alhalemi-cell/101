@@ -1,7 +1,14 @@
 import battlesim.models as m
 import battlesim.constants as c
+import battlesim.sprite as s
 import pygame
 import sys
+
+TYPE_COLORS: dict = {
+    m.MonsterType.FIRE:  (220, 90,  40),
+    m.MonsterType.WATER: (60,  130, 220),
+    m.MonsterType.GRASS: (60,  180, 60),
+}
 
 def draw_text(text, font, screen, color, x, y):
     img = font.render(text, True, color)
