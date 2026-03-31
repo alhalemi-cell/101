@@ -82,8 +82,8 @@ def main() -> None:
             if p2_shake_timer > 0: p2_shake_timer -= 1
 
             bob = int(5 * pygame.math.Vector2(1, 0).rotate(pygame.time.get_ticks() / 5).y)
-s.StaticMonsterSprite(fielded_monsters[0].name, s.SpriteOrientation.REAR_FACING, 150 + p1_offset, 290 + bob).draw(screen)
-s.StaticMonsterSprite(fielded_monsters[1].name, s.SpriteOrientation.FRONT_FACING, 500 + p2_offset, 120 - bob).draw(screen)
+            s.StaticMonsterSprite(fielded_monsters[0].name, s.SpriteOrientation.REAR_FACING, 150 + p1_offset, 290 + bob).draw(screen)
+            s.StaticMonsterSprite(fielded_monsters[1].name, s.SpriteOrientation.FRONT_FACING, 500 + p2_offset, 120 - bob).draw(screen)
 
             ui.draw_hp_bar(fielded_monsters[1], 50, 50, screen, font)    
             ui.draw_hp_bar(fielded_monsters[0], 480, 320, screen, font)  
@@ -112,12 +112,13 @@ s.StaticMonsterSprite(fielded_monsters[1].name, s.SpriteOrientation.FRONT_FACING
 
                     elif event.key == pygame.K_s:
                         active_team = player_one_team if current_turn % 2 == 0 else player_two_team
-                        swappable = [mon for mon in active_team if not mon.fainted and mon != active_player_monster]
-                        if swappable:
-                            fielded_monsters[current_turn % 2] = swappable[0]
-                            battle_text = f"Player {(current_turn % 2) + 1} switched to {fielded_monsters[current_turn % 2].name}!"
+                        chosen = ui.switch_monster_menu(screen, font, active_team, active_player_monster, (current_turn % 2) + 1)
+                        if chosen != active_player_monster:
+                            fielded_monsters[current_turn % 2] = chosen
+                            battle_text = f"Player {(current_turn % 2) + 1} switched to {chosen.name}!"
                             turn_completed = True
-
+                        else:
+                            battle_text = "Switch cancelled."
                     if turn_completed:
                         current_turn += 1
                         active_player_monster.end_of_turn(active_enemy_monster)
@@ -140,6 +141,7 @@ s.StaticMonsterSprite(fielded_monsters[1].name, s.SpriteOrientation.FRONT_FACING
                             game_over = True
                             play_again = ui.win_screen(screen, font, winner)
                             if play_again:
+                                running = False
                                 return main()
                             running = False
 
