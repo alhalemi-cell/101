@@ -56,8 +56,10 @@ def main() -> None:
 
     if ui.main_menu(screen, font):
         player_one_team, player_two_team = draft_teams(screen, font)
+        for monster in player_one_team + player_two_team:
+            monster.reset()
         fielded_monsters: list[m.Monster] = [player_one_team[0], player_two_team[0]]
-
+        
         running: bool = True
         game_over: bool = False
         clock = pygame.time.Clock()
@@ -121,7 +123,10 @@ def main() -> None:
                             battle_text = "Switch cancelled."
                     if turn_completed:
                         current_turn += 1
-                        active_player_monster.end_of_turn(active_enemy_monster)
+                        # Re-read active monster AFTER potential switch
+                        current_active = fielded_monsters[(current_turn - 1) % 2]
+                        current_enemy = fielded_monsters[current_turn % 2]
+                        current_active.end_of_turn(current_enemy)
                         
                         if fielded_monsters[0].fainted:
                             if faint_sound: faint_sound.play()
